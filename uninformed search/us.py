@@ -23,3 +23,14 @@ def valid_queens_n(board):
                 return False
     return True
 
+def solutions_solutions_n(n):
+    def helper_n_queens(n, board):
+        if len(board) == n:
+            yield board
+            return
+        
+        for col in range(n):
+            if valid_queens_n(board + [col]):
+                yield from helper_n_queens(n, board + [col])
+    
+    return list(helper_n_queens(n, []))
