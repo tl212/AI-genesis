@@ -122,3 +122,77 @@ class LightsOutPuzzle(object):
 def create_puzzle(rows, cols):
     board = [[False for _ in range(cols)] for _ in range(rows)]
     return LightsOutPuzzle(board)
+
+#linear disk movement
+
+def solve_identical_disks(length, n):
+    # Initial and goal states
+    start = 'D' * n + 'E' * (length - n)
+    goal = 'E' * (length - n) + 'D' * n
+
+    visited = set([start])
+    queue = deque([(start, [])])
+
+    while queue:
+        state, moves = queue.popleft()
+
+        if state == goal:
+            return moves
+
+        for move in possible_moves_identical(state):
+            new_state = apply_move(state, move)
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, moves + [move]))
+
+    return None
+
+
+def possible_moves_identical(state):
+    for i, s in enumerate(state):
+        if s == 'D':
+            if i + 1 < len(state) and state[i + 1] == 'E':
+                yield (i, i + 1)
+            if i + 2 < len(state) and state[i + 1] == 'D' and state[i + 2] == 'E':
+                yield (i, i + 2)
+
+def apply_move(state, move):
+    state_list = list(state)
+    state_list[move[0]], state_list[move[1]] = state_list[move[1]], state_list[move[0]]
+    return ''.join(state_list)
+
+# Distinct disks uses similar logic but tracks distinct disks
+def solve_distinct_disks(length, n):
+    start = tuple(range(n)) + tuple([-1] * (length - n))
+    goal = tuple([-1] * (length - n)) + tuple(range(n-1, -1, -1))
+
+    visited = set([start])
+    queue = deque([(start, [])])
+
+    while queue:
+        state, moves = queue.popleft()
+
+        if state == goal:
+            return moves
+
+        for move in possible_moves_distinct(state):
+            new_state = apply_move_distinct(state, move)
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, moves + [move]))
+
+    return None
+
+def possible_moves_distinct(state):
+    empty_indices = [i for i, v in enumerate(state) if v == -1]
+    disk_indices = [i for i, v in enumerate(state) if v != -1]
+
+    for disk in disk_indices:
+        for empty in empty_indices:
+            if abs(disk - empty) == 1 or (abs(disk - empty) == 2 and state[(disk + empty) // 2] != -1):
+                yield (disk, empty)
+
+def apply_move_distinct(state, move):
+    state_list = list(state)
+    state_list[move[0]], state_list[move[1]] = state_list[move[1]], state_list[move[0]]
+    return tuple(state_list)
