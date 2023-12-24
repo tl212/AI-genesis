@@ -51,3 +51,7 @@ class TilePuzzle(object):
             self.empty = (r, c + 1)
             return True
         return False
+    
+    def scramble(self, num_moves):
+        for _ in range(num_moves):
+            self.perform_move(random.choice(["up", "down", "left", "right"]))
