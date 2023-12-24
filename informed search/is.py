@@ -55,3 +55,17 @@ class TilePuzzle(object):
     def scramble(self, num_moves):
         for _ in range(num_moves):
             self.perform_move(random.choice(["up", "down", "left", "right"]))
+
+    def is_solved(self):
+        count = 1
+        for r in range(self.rows):
+            for c in range(self.cols):
+                if count == self.rows *  self.cols:
+                    if self.board[r][c] != 0:
+                        return False
+                elif self.board[r][c] != count:
+                    return False
+                count += 1
+        return True
+
+    
