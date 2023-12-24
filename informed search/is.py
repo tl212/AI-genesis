@@ -21,4 +21,5 @@ class TilePuzzle(object):
                 if self.board[r][c] == 0:
                     self.empty = (r, c)
 
-    
+    def get_board(self):
+        return [row.copy() for row in self.board]
