@@ -11,3 +11,14 @@ def create_tile_puzzle(rows, cols):
     board[-1][-1] = 0
     return TilePuzzle(board)
 
+class TilePuzzle(object):
+    def __init__(self, board):
+        self.board = [row.copy() for row in board]
+        self.rows, self.cols = len(board), len(board[0])
+        self._visited_states = set()
+        for r in range(self.rows):
+            for c in range(self.cols):
+                if self.board[r][c] == 0:
+                    self.empty = (r, c)
+
+    
