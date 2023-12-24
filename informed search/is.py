@@ -23,3 +23,31 @@ class TilePuzzle(object):
 
     def get_board(self):
         return [row.copy() for row in self.board]
+    
+    def perform_move(self, direction):
+        r, c = self.empty
+        if direction == "up" and r > 0:
+            temp = self.board[r][c]
+            self.board[r][c] = self.board[r - 1][c]
+            self.board[r - 1][c] = temp
+            self.empty = (r - 1, c)
+            return True
+        if direction == "down" and r < self.rows - 1:
+            temp = self.board[r][c]
+            self.board[r][c] = self.board[r + 1][c]
+            self.board[r + 1][c] = temp
+            self.empty = (r + 1, c)
+            return True
+        if direction == "left" and c > 0:
+            temp = self.board[r][c]
+            self.board[r][c] = self.board[r][c - 1]
+            self.board[r][c - 1] = temp
+            self.empty = (r, c - 1)
+            return True
+        if direction == "right" and c < self.cols - 1:
+            temp = self.board[r][c]
+            self.board[r][c] = self.board[r][c + 1]
+            self.board[r][c + 1] = temp
+            self.empty = (r, c + 1)
+            return True
+        return False
